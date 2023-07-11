@@ -1,2 +1,2 @@
 # Sample
-This is a sampla page
+### This is a sample page
