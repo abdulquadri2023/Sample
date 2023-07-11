@@ -1,0 +1,33 @@
+HTTrack3.49-2+htsswf+htsjava launched on Wed, 31 May 2023 15:58:29 at https://subandgain.com/ +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar
+(winhttrack -qwC2%Ps2u1%s%uN0%I0p3DaK0H0%kf2A25000%f#f -F "Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)" -%F "<!-- Mirrored from %s%s by HTTrack Website Copier/3.x [XR&CO'2014], %s -->" -%l "en, *" https://subandgain.com/ -O1 "C:\Web designing\clone training" +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/www.codeglim.com/templates/tromas/img/cbp-sprite.html (from https://subandgain.com/cssm/theme-plugins.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/bx_loader.gif (from https://subandgain.com/cssm/theme-plugins.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/www.codeglim.com/templates/tromas/css/images/controls.html (from https://subandgain.com/cssm/theme-plugins.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/www.codeglim.com/templates/tromas/css/owl.video.play.html (from https://subandgain.com/cssm/theme-plugins.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/slider/layer1.png (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/slider/layer2.png (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/slider/layer3.png (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/slider/layer4.png (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/www.codeglim.com/templates/tromas/images/slider/layer5.html (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/why-choose.jpg (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/statics.jpg (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/newslatter-bg.jpg (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/call-to-action.jpg (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/coming-soon.jpg (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/images/footer-bg.png (from https://subandgain.com/stylems.css)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/c (from https://connect.facebook.net/en_US/fbevents.js)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/b (from https://connect.facebook.net/en_US/fbevents.js)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/POST (from https://connect.facebook.net/en_US/fbevents.js)
+15:59:27	Error: 	"Not Found" (404) at link https://subandgain.com/how_it-works.php (from https://subandgain.com/how_it_works.php)
+15:59:27	Error: 	"Not Found" (404) at link subandgain.com/img/sag.png (from https://subandgain.com/register.php)
+16:00:10	Error: 	"Not Found" (404) at link subandgain.com/css/owl.video.play.png (from subandgain.com/css/owl.carousel.css)
+16:00:10	Error: 	"Not Found" (404) at link https://www.subandgain.com/img/bg/2.jpg (from https://www.subandgain.com/styles.css)
+
+HTTrack Website Copier/3.49-2 mirror complete in 1 minutes 41 seconds : 139 links scanned, 115 files written (7033295 bytes overall) [4335950 bytes received at 42930 bytes/sec], 3918783 bytes transferred using HTTP compression in 68 files, ratio 29%, 5.5 requests per connection
+(22 errors, 0 warnings, 0 messages)

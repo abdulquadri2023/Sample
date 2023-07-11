@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title></title>
+    </head>
+    <style>
+        #div1 {
+          width: 350px;
+          height: 70px;
+          padding: 10px;
+          border: 1px solid #aaaaaa;
+        }
+        h1{
+            color:blue;
+            height: 320px;
+
+        }
+        </style>
+        <script>
+        function dragover(event) {
+          event.preventDefault();
+        }
+        
+        function dragstart(event) {
+          event.dataTransfer.setData("text", event.target.id);
+        }
+        
+        function drop(event) {
+          event.preventDefault();
+          var x = event.dataTransfer.getData("text");
+          event.target.appendChild(document.getElementById(x));
+        }
+        </script>
+        </head>
+        <body>
+        
+        <p>Drag the W3Schools image into the rectangle:</p>
+        
+        <div id="div1" ondrop="drop(event)" ondragover="dragover(event)"></div>
+        <br>
+
+        <h1 id="drag" draggable="true" ondragstart="dragstart(event)"> HELLO WORLD!</h1>
+
+
+
+        <p>Count numbers: <output id="result"></output></p>
+<button onclick="startWorker()">Start Worker</button> 
+<button onclick="stopWorker()">Stop Worker</button>
+
+<p><strong>Note:</strong> Internet Explorer 9 and earlier versions do not support Web Workers.</p>
+
+<script>
+var w;
+
+function startWorker() {
+  if(typeof(Worker) !== "undefined") {
+    if(typeof(w) == "undefined") {
+      w = new Worker("demo_workers.js");
+    }
+    w.onmessage = function(event) {
+      document.getElementById("result").innerHTML = event.data;
+    };
+  } else {
+    document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Workers...";
+  }
+}
+
+function stopWorker() { 
+  w.terminate();
+  w = undefined;
+}
+</script>
+    </body>
+</html>
