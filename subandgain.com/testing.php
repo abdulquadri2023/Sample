@@ -27,6 +27,8 @@ echo $myXMLData;
 
 
 echo "<br/>";
+
+<!--onsubmit="return validateFlutter();"--
 ?>
 <input type="text" id="fname" >
 

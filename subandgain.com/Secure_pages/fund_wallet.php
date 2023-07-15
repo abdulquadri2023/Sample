@@ -1,11 +1,105 @@
 <?php 
+session_start();
 include "../database_connection.php";
+$required =  $success = "";
+$date = date("Y-m-d H:s:i");
+$transaction_id = uniqid('ID');
+
+if(isset($_SESSION['log'])){
+
+  $username_userphone = $_SESSION['log'];
+    $sql_statement= "SELECT * FROM register_info WHERE user_name = '$username_userphone' OR phone_number = '$username_userphone' LIMIT 1";
+    $sql_query = mysqli_query($data_connection, $sql_statement);
+    $sql_num_rows = mysqli_num_rows($sql_query);
+    if($sql_num_rows > 0){
+      $sql_assoc = mysqli_fetch_assoc($sql_query);
+
+        $wallet = $sql_assoc['wallet'];
+        $user_name = $sql_assoc['user_name'];
+        $phone_number = $sql_assoc['phone_number'];
+        $first_name = $sql_assoc['first_name'];
+        $last_name = $sql_assoc['last_name'];
+        $email = $sql_assoc['email'];
+    }else{
+      header('Location: ../login.php');
+      die();
+    }
 
 
+}else{
+        header('Location: ../login.php');
+        die();
+    }
+
+    if(isset($_POST['paywithcard'])){
 
 
+        $amount= filter_var($_POST['amount'], FILTER_SANITIZE_STRING);
+    
+    
+        if($amount == ""){
+          $required = "Please input amount";
+        }
+    
+        if($amount < 100 || $amount > 9500){
+            $required = "Minimum amount is #100 and maximum is #9500";
+        }
+  /*
+        if($required == ""){
+ 
+            $transaction_id = uniqid("id");
+            $currency = "NGN";
+            $redirect = "http://localhost/clone_training/subandgain.com/secure_pages/pay.php";
+            $customer = ['email'=> $email];
+            
+            $request = json_encode([
+              'tx_ref' => $transaction_id,
+              'amount' => $amount,
+              'currency' => $currency,
+              'redirect_url' => $redirect,
+              'customer' => $customer
+            ]);
+          
+                  $url = "https://api.flutterwave.com/v3/payments";
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $request);  //Post Fields
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            
+            $headers = [
+             // 'Authorization: Bearer FLWSECK_TEST--X',
+              'Content-Type: application/json',
+            
+            ];
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            
+            $response = curl_exec($ch);
+            
+            curl_close($ch);
+            
+           
+          
+            $array = json_decode($response, true);
+            echo $response;
+            if(array_key_exists("status", $array) && $array['status'] == "success"){
+            
+            $link = $array['data']['link'];
+            
+              header("location: ".$link);
 
+          
+            }
+     
+                }
+               */   
+            }
+            
+            
+            
 
+   
 
 
 
@@ -72,13 +166,20 @@ include "../database_connection.php";
 
             <div class="sidebar-header">
                 <span>SUBANDGAIN</span>
+         <?php 
+         $sql_statement = "SELECT * FROM register_info WHERE user_name = '$user_name'";
+      $check_sql = mysqli_query($data_connection, $sql_statement);
+      //$fetch_assoc = mysqli_fetch_assoc($check_sql);
+      while($user_dashboard= mysqli_fetch_assoc($check_sql)){ ?>
             </div>
 
             <ul class="list-unstyled components">
                 <p class="navp" style="text-align: center;">
                     <img src="../img/profile.png" alt="" /><br/>
                                 Hi,<br/>
-                        <b>  Sulyman</b>
+                        <b>     <?php echo $user_dashboard['user_name']; ?></b>
+                        <?php } ?>                 
+
                             </p>
                 <li class="active">
                  <a class="nava" href="dashboard.php">  <i class="fa fa-home"></i> Dashboard</a>
@@ -289,6 +390,15 @@ Make transfer to the account above to fund your wallet. <b>(1% Charge fee)</b>
    		<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
    			<h6 class="m-0 font-weight-bold">Fund Wallet </h6>
    		</div>
+       <?php 
+        if($required != ""){
+
+         echo "<div class = 'alert alert-danger'> ". $required . "</div>";
+        }else{
+
+          "<div class = 'alert alert-success'> ". $success . "</div>";
+        }
+       ?>
        <div style="margin-bottom: -20px;">
         <div class="card-body">
                   <div class="input-group mb-3">
@@ -301,6 +411,7 @@ Make transfer to the account above to fund your wallet. <b>(1% Charge fee)</b>
            </div>
          </div>
        </div>
+   
    		<form id="BANK" action="paydetails.php" name="paywallet" method="post" style="display: none;" onsubmit="return validate();">
    			<div class="card-body">
           
@@ -312,18 +423,20 @@ Make transfer to the account above to fund your wallet. <b>(1% Charge fee)</b>
            
        </div>
    </form>
-   <form id="FLUTTER" action = "https://checkout.flutterwave.com" name="payflutter" method="post" style="display: none;" onsubmit="return validateFlutter();">
+   <form id="FLUTTER" name="payflutter" method="post" style="display: none;" > 
    			<div class="card-body">
           
            <div class="input-group mb-3">
-           <input type="number" name="amount" class="form-control" value="" placeholder="Enter Amount (minimum 100)" required>
+           <input type="number" name="amount" id="amount" class="form-control" value="" placeholder="Enter Amount (minimum 100)" required/>
          </div>
          <input type="hidden" name="email" value="abdulquadri20199@gmail.com">
-          <input type="submit" class="btnn btn-primary" name="paywithcard" value="Fund wallet" />
+
+        <button type="button" class="btnn btn-primary" name="paywithcard" value="" onsubmit="return paywithcard2()" onclick="makePayment()"> Fund wallet </button>
           
            
        </div>
    </form>
+   <!----
    <form id="COUPON" method="post" style="display: none;">
         <div class="card-body">
         
@@ -331,14 +444,14 @@ Make transfer to the account above to fund your wallet. <b>(1% Charge fee)</b>
                <input type="text" class="form-control" name="coupon" placeholder="Coupon Code" />
            </div>
            
-           <input type="submit" class="btnn btn-primary" value="Fund Wallet" name="withcoupon">
+           <input type="button" class="btnn btn-primary"  value="Fund wallet" onclick="paywithcard()"/>  
            
        </div>
        <br/>
        <p> Call or whatsapp our coupon agent through <b>08061766128</b> to get a coupon code to fund your wallet.</p>
    </form>
    
-
+--->
 
 
                    </div>
@@ -468,6 +581,8 @@ function toggleElement(id,uid)
     <!-- jQuery Custom Scroller CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             $("#sidebar").mCustomScrollbar({
@@ -592,12 +707,12 @@ function copyApi(){
                
           }
           
-            function validateFlutter(){
-    if(document.payflutter.amount.value >= 100 && document.payflutter.amount.value <= 9500){
+            function paywithcard2(){
+    if(document.paywithcard.amount.value >= 100 && document.paywithcard.amount.value <= 9500){
       return true;
     }else  {
             alert( "Minimum amount is #100 and maximum is #9,500" );
-            document.payflutter.amount.focus() ;
+            document.paywithcard.amount.focus() ;
             return false;
          }
    }
@@ -622,6 +737,45 @@ document.getElementById("FLUTTER").style.display = "none";
 }
 }
 </script>
+
+<script>
+  
+  function makePayment(){
+    if(document.payflutter.amount.value >= 100 && document.payflutter.amount.value <= 9500){
+var amount2 = document.getElementById("amount").value;
+        FlutterwaveCheckout({
+      public_key: "FLWPUBK_TEST-805e1bf664f23be6a4ef5f6e4125770d-X",
+      tx_ref: "<?php echo uniqid();?>",
+      amount: amount2,
+      currency: "NGN",
+      payment_options: "card, banktransfer, ussd",
+      redirect_url: "http://localhost/clone_training/subandgain.com/secure_pages/pay.php",
+      meta: {
+        consumer_id: 23,
+        consumer_mac: "92a3-912ba-1192a",
+      },
+      customer: {
+        email: "<?php echo $email;?>",
+        phone_number: "<?php echo $phone_number;?>",
+        name: "<?php echo $first_name." ".$last_name;?>",
+      },
+      customizations: {
+        title: "SUBANDGAIN",
+        description: "Fund wallet",
+        logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
+      },
+    });
+
+   }else{
+           alert( "Minimum amount is #100 and maximum is #9500" );
+           document.payflutter.amount.focus() ;
+
+        }
+
+
+  }
+
+        </script>
 
     </body>
 </html>

@@ -36,7 +36,7 @@ if(isset($_POST['update'])){
         $validate = "Input old password";
     }
     if($new_password == ""){
-        $validate = "Input new password";
+        $validate = "Input new password";2
     }
     if($old_password != $old_passwords){
     $validate = "Incorrect old password";

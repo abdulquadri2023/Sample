@@ -4,6 +4,8 @@ include "../database_connection.php";
 $required = $success = "";
 $transaction_id = uniqid('ID');
 $date = date('Y-m-d h:I:sa');
+$api_responses = "You are successfully credited";
+$query = "";
 
 if(isset($_SESSION['log'])){
 
@@ -14,10 +16,11 @@ if(isset($_SESSION['log'])){
   $sql_num_rows = mysqli_num_rows($sql_query);
 
   if($sql_num_rows > 0 ){
-
     $sql_assoc = mysqli_fetch_assoc($sql_query);
+
     $user_name = $sql_assoc['user_name'];
     $wallet = $sql_assoc['wallet'];
+    $phone_number = $sql_assoc['phone_number'];
 
   }else{
 
@@ -30,9 +33,9 @@ if(isset($_SESSION['log'])){
 
 if(isset($_POST['buy'])){
 
-  $network = $_POST['network'];
-  $plan = $_POST['plan'];
-  $phone = $_POST['phone'];
+  $network = filter_var($_POST['network'], FILTER_SANITIZE_STRING);
+  $plan = filter_var($_POST['plan'], FILTER_SANITIZE_STRING);
+  $phone = filter_var($_POST['phone'], FILTER_SANITIZE_STRING);
 
   if($network == ""){
 
@@ -48,8 +51,51 @@ if(isset($_POST['buy'])){
 
   }
 
-  if($required = ""){
+  if($required == ""){
 
+    $sql_statement = "SELECT price FROM data_bundles WHERE network = '$network' AND gigabits = '$plan'";
+    $sql_query = mysqli_query($data_connection, $sql_statement);
+    $sql_num_rows = mysqli_num_rows($sql_query);
+    
+    if($sql_num_rows > 0 ){
+
+      $sql_assoc = mysqli_fetch_assoc($sql_query);
+      $data_plan = $sql_assoc['price'];
+
+
+    }else{
+
+      $required = "Please select valid data bundles";
+    }
+
+    if($wallet < $data_plan){
+
+      $required = "Insufficient balance please fund your wallet";
+
+    }else{
+
+      $success = "Your transaction has been processed";
+
+    }
+
+    if($required == ""){
+
+      $sql_statement2 = "UPDATE register_info SET wallet = wallet - '$data_plan' WHERE user_name = '$user_name'";
+      $sql_query2 = mysqli_query($data_connection, $sql_statement2);
+
+    }
+
+    if($sql_query2){
+
+      $sql_statement1 = "INSERT INTO transaction_history (user_name, amount, phone_number, network, plan_type, transaction_id, status, date, query, api_responses)
+      VALUES ('$user_name', '$data_plan', '$phone', '$network', '$plan', '$transaction_id', 'APPROVED', '$date', '$query', '$api_responses')";
+      
+      $sql_query1 = mysqli_query($data_connection, $sql_statement1);
+
+      
+      $success = "Your transaction has been processed successfully";
+    
+  }
 
   }
  
@@ -135,14 +181,25 @@ if($number_rows){
 
             <div class="sidebar-header">
                 <span>SUBANDGAIN</span>
+      <?php
+      $sql_statement = "SELECT * FROM register_info WHERE user_name = '$user_name'";
+      $check_sql = mysqli_query($data_connection, $sql_statement);
+      //$fetch_assoc = mysqli_fetch_assoc($check_sql);
+      while($user_dashboard= mysqli_fetch_assoc($check_sql)){ ?>
             </div>
 
             <ul class="list-unstyled components">
                 <p class="navp" style="text-align: center;">
                     <img src="../img/profile.png" alt="" /><br/>
                                 Hi,<br/>
-                        <b>  Sulyman</b>
-                            </p>
+                                
+     
+      <b>   
+      <?php echo $user_dashboard['user_name']; ?>
+
+      </b>
+      <?php } ?>                 
+    </p>
                 <li class="active">
                  <a class="nava" href="dashboard.php">  <i class="fa fa-home"></i> Dashboard</a>
                  </li>
@@ -302,10 +359,10 @@ if($number_rows){
 
 <!-- FORM START HERE -->
 
-   		<form id="form" method="post">
+<form id="form" method="post">
 <?php
       if($required != ""){
-        echo "<div class = 'alert alert-danger'> $msg </div>";
+        echo "<div class = 'alert alert-danger'> $required </div>";
       }else{
         //echo "<div class = 'alert alert-success'> $success </div>";
       }
@@ -388,21 +445,21 @@ if($number_rows){
                </thead>
                <tbody>
               <?php
-              $insert_history = "SELECT * FROM transaction_history WHERE user_name = 'user_name'";
+              $insert_history = "SELECT * FROM transaction_history WHERE user_name = '$user_name'";
               $sql_statement = mysqli_query($data_connection, $insert_history);
-              $fetch_assoc = mysqli_fetch_assoc($sql_statement);
-              while($fetch_assoc){
+              //$fetch_assoc = mysqli_fetch_assoc($sql_statement);
+              while($fetch_assoc = mysqli_fetch_assoc($sql_statement)){
               ?>
                   <tr>
-                      <td><?php echo $fetch_assoc['network'] ?></td>
-                      <td><?php echo $fetch_assoc['phone_number'] ?></td>
-                      <td> &#8358; <?php echo $fetch_assoc['amount'] ?></td>
-                      <td> <?php echo $fetch_assoc['plan_type'] ?></td>
-                      <td style="color: green;"><b> <?php echo $fetch_assoc['status'] ?> </b></td>
-                      <td> <?php echo $fetch_assoc['api_responses'] ?> </td>
-                      <td> <?php echo $fetch_assoc['date'] ?> </td>
-                      <td> <?php echo $fetch_assoc['query'] ?> </td>
-                      <td> <a href="buy_data.php?id=578687"> <button type="submit" class="btnn btn-primary" name="orderid">  </button> </a> </td>
+                      <td><?php echo $fetch_assoc['network']; ?></td>
+                      <td><?php echo $fetch_assoc['phone_number']; ?></td>
+                      <td> &#8358; <?php echo $fetch_assoc['amount']; ?></td>
+                      <td> <?php echo $fetch_assoc['plan_type']; ?></td>
+                      <td style="color: green;"><b> <?php echo $fetch_assoc['status']; ?> </b></td>
+                      <td> <?php echo $fetch_assoc['api_responses']; ?> </td>
+                      <td> <?php echo $fetch_assoc['transaction_id']; ?> </td>
+                      <td> <?php echo $fetch_assoc['date']; ?> </td>
+                      <td> <a href="buy_data.php?id=578687"> <button type="submit" class="btnn btn-primary" name="orderid"> QUERY </button> </a> </td>
                   
                   </tr>
               <?php } ?>

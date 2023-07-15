@@ -21,6 +21,8 @@ if(isset($_SESSION['log'])){
 
 
 
+
+
 ?>
 <!doctype html>
 <html lang="en">
