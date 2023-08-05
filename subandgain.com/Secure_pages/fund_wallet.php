@@ -44,7 +44,9 @@ if(isset($_SESSION['log'])){
         if($amount < 100 || $amount > 9500){
             $required = "Minimum amount is #100 and maximum is #9500";
         }
-  /*
+  
+          ////////////////////////////////// This code works for standard api which is post method //////////////////////////////////////
+
         if($required == ""){
  
             $transaction_id = uniqid("id");
@@ -59,17 +61,33 @@ if(isset($_SESSION['log'])){
               'redirect_url' => $redirect,
               'customer' => $customer
             ]);
-          
-                  $url = "https://api.flutterwave.com/v3/payments";
+
+            //////////////////////////// Why the customazations is not working /////////////////////////////////////////////
+            
+            meta: [
+              "consumer_id: 23",
+              "consumer_mac: 92a3-912ba-1192a",
+            ];
+
+            customizations: [
+              "title: VTU",
+              "description: Fund wallet",
+              "logo: https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
+            ];
+
+          ///////////////////////////////////////////////// customaztions ends here //////////////////////////
+
+
+            $url = "https://api.flutterwave.com/v3/payments";    ////////////////////// Api url that we are sending request to  /////////////////
             
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $request);  //Post Fields
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $request);  /////////////////////Post Fields ////////////////////////////
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             
             $headers = [
-             // 'Authorization: Bearer FLWSECK_TEST--X',
+              'Authorization: Bearer FLWSECK_TEST-5be64f0145ecb95f81333c0d22527685-X',
               'Content-Type: application/json',
             
             ];
@@ -80,9 +98,9 @@ if(isset($_SESSION['log'])){
             curl_close($ch);
             
            
+
           
             $array = json_decode($response, true);
-            echo $response;
             if(array_key_exists("status", $array) && $array['status'] == "success"){
             
             $link = $array['data']['link'];
@@ -92,12 +110,14 @@ if(isset($_SESSION['log'])){
           
             }
      
-                }
-               */   
+                
+
+               
             }
+    }  
             
             
-            
+            //////////////////////////// The standard api code ends here /////////////////////////////////////////////////////
 
    
 
@@ -431,7 +451,7 @@ Make transfer to the account above to fund your wallet. <b>(1% Charge fee)</b>
          </div>
          <input type="hidden" name="email" value="abdulquadri20199@gmail.com">
 
-        <button type="button" class="btnn btn-primary" name="paywithcard" value="" onsubmit="return paywithcard2()" onclick="makePayment()"> Fund wallet </button>
+        <button type="submit" class="btnn btn-primary" name="paywithcard" value="" onsubmit="return paywithcard2()" onclick="makePayment()"> Fund wallet </button>
           
            
        </div>
@@ -744,7 +764,7 @@ document.getElementById("FLUTTER").style.display = "none";
     if(document.payflutter.amount.value >= 100 && document.payflutter.amount.value <= 9500){
 var amount2 = document.getElementById("amount").value;
         FlutterwaveCheckout({
-      public_key: "FLWPUBK_TEST-805e1bf664f23be6a4ef5f6e4125770d-X",
+    //  public_key: "FLWPUBK_TEST-805e1bf664f23be6a4ef5f6e4125770d-X",
       tx_ref: "<?php echo uniqid();?>",
       amount: amount2,
       currency: "NGN",
@@ -760,7 +780,7 @@ var amount2 = document.getElementById("amount").value;
         name: "<?php echo $first_name." ".$last_name;?>",
       },
       customizations: {
-        title: "SUBANDGAIN",
+        title: "VTU",
         description: "Fund wallet",
         logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
       },
@@ -774,7 +794,7 @@ var amount2 = document.getElementById("amount").value;
 
 
   }
-
+*/
         </script>
 
     </body>

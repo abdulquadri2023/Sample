@@ -2,7 +2,7 @@
 include "../database_connection.php";
 
 
-$network = filter_var($_POST['plan_data'], FILTER_SANITIZE_STRING);
+$network = filter_var($_POST['net'], FILTER_SANITIZE_STRING);
 
 $check = "SELECT * FROM data_bundles WHERE network = '$network'";
 
