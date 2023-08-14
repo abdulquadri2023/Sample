@@ -31,6 +31,7 @@ if(isset($_SESSION['log'])){
   }
 
 if(isset($_POST['buy'])){
+
 $network = filter_var($_POST['network'], FILTER_SANITIZE_STRING);
 $plan = filter_var($_POST['plan'], FILTER_SANITIZE_STRING);
 $phone = filter_var($_POST['phone'], FILTER_SANITIZE_STRING);
@@ -48,6 +49,7 @@ $res = mysqli_query($data_connection,$sql);
 if(mysqli_num_rows($res) > 0){
   $sqlfetch = mysqli_fetch_assoc($res);
   $dataprice = $sqlfetch['price'];
+  //$network = $sqlfetch['network'];
 }else{
   $msg = "Please select a valid data bundle";
 }
@@ -60,6 +62,7 @@ if($wallets >= $dataprice){
 if($msg == ""){
    //Input parameters as given in the documentation
    //$request = "username=Prestigeguy&apiKey=sagfk6&network=$network&dataPlan=$plan&phoneNumber=$phone";
+   /*
    $request = "";
    $param["username"] = "sulyman";
 $param["apiKey"] = "sag1pyue8rg85adp7vraemu4gre0dubvw8onutri9hhuu254rcako";
@@ -92,14 +95,24 @@ $ustatus = $array['status'];
 $transid = $array['trans_id'];
 //$cal = ($dataprice / 100)* 2;
 if($ustatus == "Approved"){
-
+*/
   //$sql1 = "UPDATE register_info SET wallet = wallet - '$dataprice', point = point + '$cal' WHERE username = '$user_name'";
   $sql1 = "UPDATE register_info SET wallet = wallet - '$dataprice' WHERE user_name = '$user_name'";
   $res1 = mysqli_query($data_connection, $sql1);
 
   if($res1){
 
-    $sql2 = "INSERT INTO transaction_history (uname, amount, transaction_id, network, date, status, plan, phone, type) VALUES ('$user_name','$dataprice','$transid','$network','$date','$ustatus','$plan','$phone','data')";
+    $transid = uniqid("D");
+
+    $sql3 = "SELECT SUM(amount) as before_pay FROM transaction_history";
+    $con3 = mysqli_query($data_connection, $sql3);
+    $assoc = mysqli_fetch_assoc($con3);
+    $before = $assoc['before_pay'];
+
+    $after = $before - $dataprice;
+
+    $sql2 = "INSERT INTO transaction_history (user_name, amount, before_transaction, after, transaction_id, category, date, status, plan_type, phone_number) 
+    VALUES ('$user_name','$dataprice', '$before', '$after', '$transid','$network','$date','SUCCESSFUL','$plan','$phone')";
     $res2 = mysqli_query($data_connection, $sql2);
     if($res2){
 
@@ -110,7 +123,7 @@ if($ustatus == "Approved"){
   $msg = "Order not processed, please try again";
 }
 }
-}
+
 $sql = "SELECT * FROM register_info WHERE user_name = '$username_userphone' OR phone_number = '$username_userphone' LIMIT 1";
 $res = mysqli_query($data_connection, $sql);
 if(mysqli_num_rows($res) > 0){
@@ -226,7 +239,7 @@ include "head.php";
                   
 ?>
                                 <tr>
-                   <td><?php echo $history['network'];?> </td>
+                   <td><?php echo $history['category'];?> </td>
                     <td> <?php echo $history['phone_number'];?>  </td>
                   <td> &#8358;<?php echo $history['amount'];?>  </td>
                   <td><?php echo $history['plan_type'];?>  </td>

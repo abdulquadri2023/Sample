@@ -53,6 +53,7 @@ if(isset($_SESSION['log'])){
             $currency = "NGN";
             $redirect = "http://localhost/clone_training/subandgain.com/secure_pages/pay.php";
             $customer = ['email'=> $email];
+            //$customer = ['name'=> $user_name];
             
             $request = json_encode([
               'tx_ref' => $transaction_id,
@@ -62,7 +63,7 @@ if(isset($_SESSION['log'])){
               'customer' => $customer
             ]);
 
-            //////////////////////////// Why the customazations is not working /////////////////////////////////////////////
+            //////////////////////////// Where to customize /////////////////////////////////////////////
             
             meta: [
               "consumer_id: 23",
@@ -764,7 +765,7 @@ document.getElementById("FLUTTER").style.display = "none";
     if(document.payflutter.amount.value >= 100 && document.payflutter.amount.value <= 9500){
 var amount2 = document.getElementById("amount").value;
         FlutterwaveCheckout({
-    //  public_key: "FLWPUBK_TEST-805e1bf664f23be6a4ef5f6e4125770d-X",
+      public_key: "FLWPUBK_TEST-805e1bf664f23be6a4ef5f6e4125770d-X",
       tx_ref: "<?php echo uniqid();?>",
       amount: amount2,
       currency: "NGN",

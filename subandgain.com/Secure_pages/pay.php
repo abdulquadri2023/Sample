@@ -91,7 +91,7 @@ $url2 = "https://api.flutterwave.com/v3/transactions/".$transaction_id2."/verify
   curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers2);
  $response2 = curl_exec($ch2);
  curl_close($ch2);
-
+ //echo $response2;
 ///////////////////////////////////////////////// decode the JSON response ///////////////////////////////////////////////////////
 
  $array2 = json_decode($response2, true);              
@@ -103,16 +103,28 @@ $url2 = "https://api.flutterwave.com/v3/transactions/".$transaction_id2."/verify
 
  ////////////////////////////////////////////// Update and credit the customer wallet ///////////////////////////////////////
 
-    $sql2 = "UPDATE register_info SET wallet = wallet + '$payment_amount2' WHERE email = '$pay_email2'";
-    $res2 = mysqli_query($data_connection, $sql2);
+    //$sql2 = "UPDATE payment_history SET wallet = wallet + '$payment_amount2' WHERE name_email = '$pay_email2'";
+    //$res2 = mysqli_query($data_connection, $sql2);
+
+    
+$sql2 = "UPDATE register_info SET wallet = wallet + '$payment_amount2' WHERE email = '$pay_email2'";
+$res2 = mysqli_query($data_connection, $sql2);
 
 if($res2){
 
    $payment_date2 = date("Y/m/d h:I:sa");
 
-$sql_statement2 = "INSERT INTO payment_history (name, amount, status, transaction_ref, date) 
-VALUES ('$pay_name2', '$payment_amount2', '$payment_status2', '$transaction_ref2', '$payment_date2')";
-$sql_query2 = mysqli_query($data_connection, $sql_statement2);
+   $sql3 = "SELECT SUM(amount) as before_pay FROM transaction_history";
+   $con3 = mysqli_query($data_connection, $sql3);
+   $assoc = mysqli_fetch_assoc($con3);
+   $before = $assoc['before_pay'];
+
+   $after = $before + $payment_amount2;
+
+   $sql_statement2 = "INSERT INTO transaction_history (user_name, amount, before_transaction, after, category, status, transaction_id, date) 
+   VALUES ('$pay_email2', '$payment_amount2', '$before', '$after', 'CREDIT', '$payment_status2', '$transaction_ref2', '$payment_date2')";
+   $sql_query2 = mysqli_query($data_connection, $sql_statement2);
+
 
     header("location: index.php");
 
@@ -122,7 +134,7 @@ $sql_query2 = mysqli_query($data_connection, $sql_statement2);
     alert('Transaction not successful, kindly cotact your bank suport if you have been debited');
     window.location.href = 'index.php'
     </script>";
-    //header("location: index.php");
+    header("location: index.php");
 
     header("location: fund_wallet.php");
 
@@ -138,9 +150,9 @@ $sql_query2 = mysqli_query($data_connection, $sql_statement2);
 
 /*
 \Web_designing\xampp\htdocs\clone_training
-
-
-
+\Web_designing\xampp\htdocs\Admin_side
+\Web_designing\xampp\htdocs\forex
+/Users/Elegante/.ssh/id_rsa.pub
 
 
 
@@ -166,6 +178,6 @@ git push -u origin main
 // url link to vtu document 
 
 https://github.com/abdulquadri2023/VTU_docoment.git
-*/
+*/ //Bola2508
 
 ?>
