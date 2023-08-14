@@ -104,7 +104,7 @@ if($ustatus == "Approved"){
 
     $transid = uniqid("D");
 
-    $sql3 = "SELECT SUM(amount) as before_pay FROM transaction_history";
+    $sql3 = "SELECT SUM(wallet) AS before_pay FROM transaction_history";
     $con3 = mysqli_query($data_connection, $sql3);
     $assoc = mysqli_fetch_assoc($con3);
     $before = $assoc['before_pay'];

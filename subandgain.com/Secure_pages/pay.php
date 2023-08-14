@@ -114,15 +114,15 @@ if($res2){
 
    $payment_date2 = date("Y/m/d h:I:sa");
 
-   $sql3 = "SELECT SUM(amount) as before_pay FROM transaction_history";
+   $sql3 = "SELECT SUM(wallet) as before_pay FROM transaction_history";
    $con3 = mysqli_query($data_connection, $sql3);
    $assoc = mysqli_fetch_assoc($con3);
    $before = $assoc['before_pay'];
 
    $after = $before + $payment_amount2;
 
-   $sql_statement2 = "INSERT INTO transaction_history (user_name, amount, before_transaction, after, category, status, transaction_id, date) 
-   VALUES ('$pay_email2', '$payment_amount2', '$before', '$after', 'CREDIT', '$payment_status2', '$transaction_ref2', '$payment_date2')";
+   $sql_statement2 = "INSERT INTO transaction_history (user_name, amount, wallet, before_transaction, after, category, status, transaction_id, date) 
+   VALUES ('$pay_email2', '$payment_amount2', '$payment_amount2', '$before', '$after', 'CREDIT', '$payment_status2', '$transaction_ref2', '$payment_date2')";
    $sql_query2 = mysqli_query($data_connection, $sql_statement2);
 
 
